@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-navbar',
@@ -10,9 +11,13 @@ import { NgIf } from '@angular/common';
   standalone: true,
 })
 export class Navbar {
-  isLoggedIn = true; //test
-  userRole: 'chef' | 'admin' | '' = 'chef'; //test
-  userFullName = 'Test'; //test
+  constructor(private auth: Auth) {}
 
-  logout() {}
+  get isLoggedIn() {return this.auth.isLoggedIn(); }
+  get userRole() {return this.auth.currentUser()?.role ?? ''; }
+  get userFullName() {return this.auth.currentUser()?.fullName ?? ''; }
+  
+  logout() {
+    this.auth.logout();
+  }
 }
