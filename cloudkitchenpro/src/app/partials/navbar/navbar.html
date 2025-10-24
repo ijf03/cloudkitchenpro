@@ -1,1 +1,48 @@
-<p>navbar works!</p>
+<nav class="navbar navbar-expand-md bg-body-tertiary fixed-top">
+  <div class="container-fluid">
+
+    <a class="navbar-brand d-flex align-items-center" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+      <img src="assets/images/RecipeHubLogo.png" alt="Logo" width="30" height="30" class="me-2">
+      Recipe Hub
+    </a>
+
+    <button class="navbar-toggler ms-auto" type="button"
+            data-bs-toggle="collapse" data-bs-target="#mainNav"
+            aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+            Home
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="isLoggedIn && userRole === 'chef'">
+          <a class="nav-link" routerLink="/recipes" routerLinkActive="active">
+            Recipes
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link" routerLink="/inventory" routerLinkActive="active">
+            Inventory
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="isLoggedIn; else showLogin">
+          <a class="nav-link" (click)="logout()">
+            Logout <span *ngIf="userFullName">({{ userFullName }})</span>
+          </a>
+        </li>
+        <ng-template #showLogin>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</nav>

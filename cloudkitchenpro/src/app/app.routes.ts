@@ -1,3 +1,30 @@
 import { Routes } from '@angular/router';
+import { Dashboard } from './pages/dashboard/dashboard';
+import { RecipesList } from './pages/recipes/recipes-list/recipes-list';
+import { RecipeNew} from './pages/recipes/recipe-new/recipe-new';
+import { RecipeEdit } from './pages/recipes/recipe-edit/recipe-edit';
+import { InventoryList } from './pages/inv/inventory-list/inventory-list';
+import { InventoryNew } from './pages/inv/inventory-new/inventory-new';
+import { InventoryEdit} from './pages/inv/inventory-edit/inventory-edit';
+import { Login} from './pages/auth/login/login';
+import { Register } from './pages/auth/register/register';
+import { NotFound } from './pages/not-found/not-found';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+
+  { path: 'dashboard', component: Dashboard},
+
+  { path: 'recipes', component:RecipesList},
+  { path: 'recipes/new', component: RecipeNew },
+  { path: 'recipes/:id/edit', component: RecipeEdit},
+
+  { path: 'inventory', component:InventoryList},
+  { path: 'inventory/new', component:InventoryNew },
+  { path: 'inventory/:id/edit', component: InventoryEdit},
+
+  { path: 'login', component: Login},
+  { path: 'register', component: Register},
+
+  { path: '**', component: NotFound}
+];

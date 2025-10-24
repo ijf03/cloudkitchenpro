@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-recipes-new',
   imports: [],
-  templateUrl: './recipes-new.html',
-  styleUrl: './recipes-new.css',
+  templateUrl: './recipe-new.html',
+  styleUrl: './recipe-new.css',
 })
 export class RecipeNew {
 
