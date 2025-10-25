@@ -1,1 +1,45 @@
-<p>inventory-list works!</p>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 m-0">Inventory</h1>
+  <a class="btn btn-primary" routerLink="/inventory/new">Add New Item</a>
+</div>
+
+<div class="mb-3">
+  <input class="form-control" placeholder="Filter by ingredient name…" [(ngModel)]="filterText">
+</div>
+
+<div *ngIf="loading" class="text-muted">Loading…</div>
+<div *ngIf="errorMsg" class="text-danger">{{ errorMsg }}</div>
+
+<table class="table table-striped" *ngIf="!loading && filteredItems.length">
+  <thead>
+    <tr>
+      <th>Ingredient</th>
+      <th class="text-end">Qty</th>
+      <th>Unit</th>
+      <th>Category</th>
+      <th>Purchase</th>
+      <th>Expires</th>
+      <th>Location</th>
+      <th class="text-end">Cost</th>
+      <th class="text-end"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let it of filteredItems; trackBy: trackById">
+      <td>{{ it.ingredientName }}</td>
+      <td class="text-end">{{ it.quantity }}</td>
+      <td>{{ it.unit }}</td>
+      <td>{{ it.category }}</td>
+      <td>{{ it.purchaseDate }}</td>
+      <td>{{ it.expirationDate }}</td>
+      <td>{{ it.location }}</td>
+      <td class="text-end">{{ it.cost}}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-secondary me-2" [routerLink]="['/inventory', it._id, 'edit']">Edit</a>
+        <button class="btn btn-sm btn-danger" (click)="delete(it)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!loading && !filteredItems.length" class="text-muted">No items found.</div>

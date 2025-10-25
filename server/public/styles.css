@@ -1,0 +1,27 @@
+.hero {
+    background: linear-gradient(135deg, #f8f9fa 0%, #eef3ff 40%, #e9f7ff 100%);
+    border-radius: 1rem;
+    padding: 2.5rem 2rem;
+}
+.stat-card {
+    transition: transform .12s ease, box-shadow .12s ease;
+    border: 1px solid rgba(0,0,0,.05);
+}
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08);
+}
+.stat-value {
+    font-size: 2.5rem;
+    line-height: 1;
+    margin: 0;
+}
+.section {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+.is-changed {
+  border-color: #ffcd39 !important;
+  background-color: #fffbea; 
+}
+.original-hint { display: none; }
