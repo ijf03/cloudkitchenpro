@@ -35,4 +35,6 @@ export class Dashboard implements OnInit {
   }
 
   get isChef() { return this.stats?.role === 'chef'; }
+  get isLoggedIn() { return !!this.stats?.currentUserName; }
+  get isAdmin() { return this.stats?.role === 'admin'; }
 }

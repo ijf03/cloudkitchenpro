@@ -23,6 +23,18 @@ const DASH = `${API}/api/dashboard-${SID}`;
 export class Home {
   constructor(private http: HttpClient) {}
   getStats() {
+    let userId = '';
+    try {
+      const raw = localStorage.getItem('user');
+      const u = raw ? JSON.parse(raw) : null;
+      userId = u?.userId || '';
+    } catch {}
+
+    // pass userId to the server
+    if (userId) {
+      return this.http.get<DashboardStats>(DASH, { params: { userId } });
+    }
     return this.http.get<DashboardStats>(DASH);
   }
+
 }

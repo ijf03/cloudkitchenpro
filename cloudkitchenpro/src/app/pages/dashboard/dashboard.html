@@ -3,76 +3,99 @@
     <h1 class="h4 m-0">Dashboard</h1>
     <p class="text-muted m-0">Quick snapshot of your kitchen</p>
   </div>
-  <button class="btn btn-sm btn-outline-secondary" (click)="load()" [disabled]="loading">
-    Refresh
-  </button>
+  <button class="btn btn-sm btn-outline-secondary" (click)="load()" [disabled]="loading">Refresh</button>
 </div>
 
 <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 <div *ngIf="loading" class="text-muted">Loading…</div>
 
-<div *ngIf="!loading && stats">
-  <!-- Hero -->
+<ng-template #guest>
   <div class="card mb-3 shadow-sm">
     <div class="card-body">
-      <h5 class="card-title m-0">
-        <ng-container *ngIf="stats.currentUserName; else welcome">
-          Welcome, <span class="fw-semibold">{{ stats.currentUserName }}</span>
-        </ng-container>
-        <ng-template #welcome>Welcome to <span class="fw-semibold">Recipe Hub</span></ng-template>
-      </h5>
-      <div class="text-muted">Here’s a quick snapshot of your kitchen.</div>
+      <h1 class="h2 mb-2">Welcome to <span class="fw-semibold">Recipe Hub</span></h1>
+      <p class="text-secondary mb-3">Browse recipes and inventory. Log in to add your own.</p>
+      <div class="d-flex gap-2">
+        <a class="btn btn-primary" routerLink="/login">Log in</a>
+        <a class="btn btn-outline-secondary" routerLink="/register">Register</a>
+      </div>
     </div>
   </div>
+</ng-template>
 
-  <!-- Stats -->
-  <div class="row g-3 mb-3">
-    <div class="col-12 col-md-4">
-      <div class="card stat-card h-100">
-        <div class="card-body text-center">
-          <h6 class="text-uppercase text-muted mb-2">Users</h6>
-          <p class="display-6 m-0">{{ stats.userCount }}</p>
+<div *ngIf="!loading && stats as s">
+  <ng-container *ngIf="isLoggedIn; else guest">
+    <!-- Hero -->
+    <div class="card mb-3 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title m-0">Welcome, <span class="fw-semibold">{{ s.currentUserName }}</span></h5>
+        <div class="text-muted">Here’s a quick snapshot of your kitchen.</div>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="row g-3 mb-3">
+      <!-- Users -->
+      <div class="col-12 col-md-4">
+        <div class="card stat-card h-100">
+          <div class="card-body text-center">
+            <h6 class="text-uppercase text-muted mb-2">Users</h6>
+            <p class="display-6 m-0">{{ s.userCount }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- IF Chef = Recipes (my/total); if Admin = Expiring Soon -->
+      <div class="col-12 col-md-4">
+        <div class="card stat-card h-100">
+          <div class="card-body text-center">
+            <ng-container *ngIf="isChef; else expiring">
+              <h6 class="text-uppercase text-muted mb-2">Recipes</h6>
+              <p class="display-6 m-0">
+                {{ s.myRecipeCount ?? s.recipeCount }}
+                <ng-container *ngIf="s.myRecipeCount !== null">
+                  <small class="text-muted">/ {{ s.recipeCount }}</small>
+                </ng-container>
+              </p>
+              <div class="small text-muted" *ngIf="s.myRecipeCount !== null">My Recipes / Total</div>
+            </ng-container>
+            <ng-template #expiring>
+              <h6 class="text-uppercase text-muted mb-2">Expiring Soon (7 days)</h6>
+              <p class="display-6 m-0">{{ s.expiringSoonCount }}</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory items + value -->
+      <div class="col-12 col-md-4">
+        <div class="card stat-card h-100">
+          <div class="card-body text-center">
+            <h6 class="text-uppercase text-muted mb-2">Inventory Items</h6>
+            <p class="display-6 m-0">{{ s.inventoryCount }}</p>
+            <div class="small text-muted">Value: ${{ (s.inventoryValue || 0) | number:'1.2-2' }}</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="col-12 col-md-4">
-      <div class="card stat-card h-100">
-        <div class="card-body text-center">
-          <ng-container *ngIf="isChef; else expiring">
-            <h6 class="text-uppercase text-muted mb-2">Recipes</h6>
-            <p class="display-6 m-0">
-              {{ stats.myRecipeCount ?? stats.recipeCount }}
-              <ng-container *ngIf="stats.myRecipeCount !== null">
-                <small class="text-muted">/ {{ stats.recipeCount }}</small>
-              </ng-container>
-            </p>
-          </ng-container>
-          <ng-template #expiring>
-            <h6 class="text-uppercase text-muted mb-2">Expiring Soon (7 days)</h6>
-            <p class="display-6 m-0">{{ stats.expiringSoonCount }}</p>
-          </ng-template>
+    <!-- CTAs -->
+    <div class="row g-3">
+      <!-- Chef: both buttons -->
+      <ng-container *ngIf="isChef">
+        <div class="col-12 col-md-6">
+          <a class="btn btn-primary w-100 py-3" routerLink="/recipes">View Recipes</a>
         </div>
-      </div>
-    </div>
-
-    <div class="col-12 col-md-4">
-      <div class="card stat-card h-100">
-        <div class="card-body text-center">
-          <h6 class="text-uppercase text-muted mb-2">Inventory Items</h6>
-          <p class="display-6 m-0">{{ stats.inventoryCount }}</p>
-          <div class="small text-muted">Value: ${{ (stats.inventoryValue || 0) | number:'1.2-2' }}</div>
+        <div class="col-12 col-md-6">
+          <a class="btn btn-outline-primary w-100 py-3" routerLink="/inventory">View Inventory</a>
         </div>
-      </div>
-    </div>
-  </div>
+      </ng-container>
 
-  <div class="row g-3">
-    <div class="col-12 col-md-6">
-      <a class="btn btn-primary w-100 py-3" routerLink="/recipes">View Recipes</a>
+      <!-- Admin: inventory only (full width) -->
+      <ng-container *ngIf="isAdmin">
+        <div class="col-12">
+          <a class="btn btn-outline-primary w-100 py-3" routerLink="/inventory">View Inventory</a>
+        </div>
+      </ng-container>
     </div>
-    <div class="col-12 col-md-6">
-      <a class="btn btn-outline-primary w-100 py-3" routerLink="/inventory">View Inventory</a>
-    </div>
-  </div>
+  </ng-container>
 </div>
