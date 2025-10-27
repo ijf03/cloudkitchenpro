@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const SID = '34095756';
-const API = 'http://localhost:8080';
+const API = '';
 
 @Injectable({ providedIn: 'root' })
 export class Auth {

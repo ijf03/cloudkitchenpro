@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const SID = '34095756';
-const API = 'http://localhost:8080';
+const API = '';
 const BASE = `${API}/api/inventory-${SID}`;
 const META = `${API}/api/inventory-meta-${SID}`;
 

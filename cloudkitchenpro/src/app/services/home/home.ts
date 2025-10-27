@@ -14,7 +14,7 @@ export interface DashboardStats {
 }
 
 const SID  = '34095756';
-const API  = 'http://localhost:8080';
+const API  = '';
 const DASH = `${API}/api/dashboard-${SID}`;
 
 @Injectable({
