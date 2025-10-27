@@ -9,6 +9,7 @@ import { InventoryEdit} from './pages/inv/inventory-edit/inventory-edit';
 import { Login} from './pages/auth/login/login';
 import { Register } from './pages/auth/register/register';
 import { NotFound } from './pages/not-found/not-found';
+import { InventoryView } from './pages/inv/inventory-view/inventory-view';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'inventory', component:InventoryList},
   { path: 'inventory/new', component:InventoryNew },
   { path: 'inventory/edit/:id', component: InventoryEdit},
+  { path: 'inventory/:id', component: InventoryView },
 
   { path: 'login', component: Login},
   { path: 'register', component: Register},

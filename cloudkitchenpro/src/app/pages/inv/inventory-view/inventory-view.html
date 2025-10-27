@@ -1,0 +1,57 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 m-0">{{ item?.ingredientName || 'Inventory Item' }}</h1>
+  <div>
+    <a class="btn btn-outline-secondary me-2" [routerLink]="['/inventory/edit', item?.inventoryId]">Edit</a>
+    <a class="btn btn-outline-secondary" routerLink="/inventory">Back to Inventory</a>
+  </div>
+</div>
+
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+<div *ngIf="!error && !item" class="text-muted">Loading…</div>
+
+<div *ngIf="item" class="row g-4 mb-1">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-header">Details</div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6 col-xl-4">
+            <dl class="row mb-0">
+              <dt class="col-5 col-sm-4">Inventory ID</dt>
+              <dd class="col-7 col-sm-8"><code class="text-danger">{{ item.inventoryId }}</code></dd>
+
+              <dt class="col-5 col-sm-4">Quantity</dt>
+              <dd class="col-7 col-sm-8">{{ item.quantity }} {{ item.unit }}</dd>
+
+              <dt class="col-5 col-sm-4">Category</dt>
+              <dd class="col-7 col-sm-8">{{ item.category }}</dd>
+            </dl>
+          </div>
+
+          <div class="col-md-6 col-xl-4">
+            <dl class="row mb-0">
+              <dt class="col-5 col-sm-4">Purchased</dt>
+              <dd class="col-7 col-sm-8">{{ item.purchaseDate }}</dd>
+
+              <dt class="col-5 col-sm-4">Expires</dt>
+              <dd class="col-7 col-sm-8">{{ item.expirationDate }}</dd>
+
+              <dt class="col-5 col-sm-4">Location</dt>
+              <dd class="col-7 col-sm-8">{{ item.location }}</dd>
+            </dl>
+          </div>
+
+          <div class="col-md-6 col-xl-4">
+            <dl class="row mb-0">
+              <dt class="col-5 col-sm-4">Cost (AU$)</dt>
+              <dd class="col-7 col-sm-8">{{ item.cost | number:'1.2-2' }}</dd>
+
+              <dt class="col-5 col-sm-4">Created</dt>
+              <dd class="col-7 col-sm-8">{{ item.createdDate }}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
