@@ -8,6 +8,7 @@ const { SID, PORT, MONGO_URL } = require("./config/constants");
 const recipeRouter = require("./routes/recipe-routes");
 const inventoryRouter = require("./routes/inventory-routes");
 const userRouter = require('./routes/user-routes');
+const homeRouter = require('./routes/home-routes');
 
 const app = express();
 
@@ -55,10 +56,10 @@ app.use(async (req, res, next) => {
 
 const { connectDB } = require('./config/db');
 connectDB(MONGO_URL);
-
 app.use("/", recipeRouter);
 app.use("/", inventoryRouter);
 app.use('/', userRouter);
+app.use('/', homeRouter);
 
 app.use('/api', (req, res) => res.status(404).json({ message: 'API route not found' }));
 

@@ -1,1 +1,78 @@
-<p>dashboard works!</p>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <div>
+    <h1 class="h4 m-0">Dashboard</h1>
+    <p class="text-muted m-0">Quick snapshot of your kitchen</p>
+  </div>
+  <button class="btn btn-sm btn-outline-secondary" (click)="load()" [disabled]="loading">
+    Refresh
+  </button>
+</div>
+
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+<div *ngIf="loading" class="text-muted">Loading…</div>
+
+<div *ngIf="!loading && stats">
+  <!-- Hero -->
+  <div class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title m-0">
+        <ng-container *ngIf="stats.currentUserName; else welcome">
+          Welcome, <span class="fw-semibold">{{ stats.currentUserName }}</span>
+        </ng-container>
+        <ng-template #welcome>Welcome to <span class="fw-semibold">Recipe Hub</span></ng-template>
+      </h5>
+      <div class="text-muted">Here’s a quick snapshot of your kitchen.</div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="row g-3 mb-3">
+    <div class="col-12 col-md-4">
+      <div class="card stat-card h-100">
+        <div class="card-body text-center">
+          <h6 class="text-uppercase text-muted mb-2">Users</h6>
+          <p class="display-6 m-0">{{ stats.userCount }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="card stat-card h-100">
+        <div class="card-body text-center">
+          <ng-container *ngIf="isChef; else expiring">
+            <h6 class="text-uppercase text-muted mb-2">Recipes</h6>
+            <p class="display-6 m-0">
+              {{ stats.myRecipeCount ?? stats.recipeCount }}
+              <ng-container *ngIf="stats.myRecipeCount !== null">
+                <small class="text-muted">/ {{ stats.recipeCount }}</small>
+              </ng-container>
+            </p>
+          </ng-container>
+          <ng-template #expiring>
+            <h6 class="text-uppercase text-muted mb-2">Expiring Soon (7 days)</h6>
+            <p class="display-6 m-0">{{ stats.expiringSoonCount }}</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="card stat-card h-100">
+        <div class="card-body text-center">
+          <h6 class="text-uppercase text-muted mb-2">Inventory Items</h6>
+          <p class="display-6 m-0">{{ stats.inventoryCount }}</p>
+          <div class="small text-muted">Value: ${{ (stats.inventoryValue || 0) | number:'1.2-2' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-md-6">
+      <a class="btn btn-primary w-100 py-3" routerLink="/recipes">View Recipes</a>
+    </div>
+    <div class="col-12 col-md-6">
+      <a class="btn btn-outline-primary w-100 py-3" routerLink="/inventory">View Inventory</a>
+    </div>
+  </div>
+</div>
