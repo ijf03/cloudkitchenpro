@@ -8,5 +8,6 @@ router.post(`/api/register-${SID}`, userCont.registerJson);
 router.post(`/api/login-${SID}`, userCont.loginJson);
 
 router.post(`/api/logout-${SID}`, userCont.logoutJson);
+router.get(`/api/roles-${SID}`, userCont.rolesJson);
 
 module.exports = router;

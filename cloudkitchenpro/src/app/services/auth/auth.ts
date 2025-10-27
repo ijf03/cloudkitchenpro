@@ -13,10 +13,6 @@ export class Auth {
     return this.http.post<any>(`${API}/api/login-${SID}`, form);
   }
 
-  register(form: { email: string; password: string; name: string }): Observable<any> {
-    return this.http.post<any>(`${API}/api/register-${SID}`, form);
-  }
-
   setSession(user: any) {
     localStorage.setItem('user', JSON.stringify(user));
   }
@@ -42,4 +38,22 @@ export class Auth {
     this.clearSession();
     window.location.href = '/login';
   }
+
+  
+getRoles() {
+  return this.http.get<{roles: string[]}>(`${API}/api/roles-${SID}`);
+}
+
+register(payload: {
+  fullName: string;
+  email: string;
+  phone?: string;
+  role: string;
+  password: string;
+}) {
+  return this.http.post<{ok: boolean; user?: any; message?: string}>(
+    `${API}/api/register-${SID}`,
+    payload
+  );
+}
 }

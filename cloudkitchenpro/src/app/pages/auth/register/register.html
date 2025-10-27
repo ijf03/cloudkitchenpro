@@ -1,1 +1,48 @@
-<p>register works!</p>
+<div class="container" style="max-width:860px">
+  <h1 class="h3 mb-3">Create an account</h1>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <form #f="ngForm" (ngSubmit)="submit(f)" class="row g-3" novalidate>
+    <div class="col-md-6">
+      <label class="form-label">Full name</label>
+      <input name="fullName" class="form-control" required
+             [pattern]="nameRx" [(ngModel)]="model.fullName">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Role</label>
+      <select name="role" class="form-select" required [(ngModel)]="model.role">
+        <option value="">Select role</option>
+        <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Email</label>
+      <input name="email" type="email" class="form-control" required
+             [(ngModel)]="model.email">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Phone</label>
+      <input name="phone" class="form-control" [pattern]="phoneRx"
+             placeholder="+61 4xx xxx xxx or similar" [(ngModel)]="model.phone">
+    </div>
+
+    <div class="col-12">
+      <label class="form-label">Password</label>
+      <input name="password" type="password" class="form-control" required
+             [pattern]="pwRx" minlength="8" [(ngModel)]="model.password"
+             aria-describedby="pwHelp">
+      <div id="pwHelp" class="form-text">
+        8+ chars with uppercase, lowercase, number, and one of @$!%*?&.
+      </div>
+    </div>
+
+    <div class="col-12 d-flex gap-2">
+      <button class="btn btn-primary" [disabled]="saving || f.invalid">Create account</button>
+      <a class="btn btn-outline-secondary" routerLink="/login">Go to login</a>
+    </div>
+  </form>
+</div>

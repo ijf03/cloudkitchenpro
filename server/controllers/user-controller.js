@@ -35,46 +35,47 @@ exports.registerForm = (req, res) => {
   });
 };
 
+exports.rolesJson = (_req, res) => {
+  res.json({ roles: ROLES });
+};
+
 // POST reg
-exports.register = async (req, res) => {
-  const SID = req.app.locals.SID;
-  const { email, password, fullName, role, phone } = req.body || {};
-  const form = { email, fullName, role, phone };
-
-  // Server checks
-  if (!EMAIL_RX.test(String(email || '').toLowerCase())) {
-    return res.status(400).render('auth/register', { pageTitle:'Sign up', SID, roles:ROLES, form, error:'Invalid email format.' });
-  }
-  if (!PW_RX.test(String(password || ''))) {
-    return res.status(400).render('auth/register', { pageTitle:'Sign up', SID, roles:ROLES, form, error:'Password must be 8+ chars incl. upper, lower, number, special.' });
-  }
-  if (!ROLES.includes(role)) {
-    return res.status(400).render('auth/register', { pageTitle:'Sign up', SID, roles:ROLES, form, error:'Invalid role selected.' });
-  }
-  if (!String(fullName || '').trim()) {
-    return res.status(400).render('auth/register', { pageTitle:'Sign up', SID, roles:ROLES, form, error:'Full name is required.' });
-  }
-
+exports.registerJson = async (req, res) => {
   try {
-    const exists = await User.findOne({ email: String(email).toLowerCase().trim() }).lean();
-    if (exists) {
-      return res.status(400).render('auth/register', { pageTitle:'Sign up', SID, roles:ROLES, form, error:'Email is already registered.' });
-    }
+    const { email, password, fullName, role, phone } = req.body || {};
 
-    await User.create({
+    if (!EMAIL_RX.test(String(email || '').toLowerCase()))
+      return res.status(400).json({ message: 'Invalid email format.' });
+
+    if (!PW_RX.test(String(password || '')))
+      return res.status(400).json({ message: 'Password must be 8+ chars incl. upper, lower, number, special.' });
+
+    if (!ROLES.includes(role))
+      return res.status(400).json({ message: 'Invalid role selected.' });
+
+    if (!String(fullName || '').trim())
+      return res.status(400).json({ message: 'Full name is required.' });
+
+    const exists = await User.findOne({ email: String(email).toLowerCase().trim() }).lean();
+    if (exists) return res.status(400).json({ message: 'Email is already registered.' });
+
+    const user = await User.create({
       userId: await nextUserId(),
       fullName: String(fullName).trim(),
       email: String(email).toLowerCase().trim(),
-      password,
+      password: String(password),
       role,
-      phone: String(phone || '').trim()
+      phone: String(phone || '').trim(),
+      isLoggedIn: false
     });
 
-    return res.redirect(`/login-${SID}`);
-  } catch (err) {
-    return res.status(400).render('auth/register', {
-      pageTitle: 'Sign up', SID, roles: ROLES, form, error: firstError(err)
+    res.status(201).json({
+      ok: true,
+      user: { userId: user.userId, fullName: user.fullName, email: user.email, role: user.role }
     });
+  } catch (err) {
+    const msg = err?.code === 11000 ? 'Email or userId must be unique.' : (err?.message || 'Registration failed.');
+    res.status(400).json({ message: msg });
   }
 };
 
