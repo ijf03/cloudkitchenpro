@@ -4,7 +4,7 @@ const recipeCont = require('../controllers/recipe-controller');
 const {SID} = require('../config/constants');
 
 // LIST
-router.get(`/recipes-${SID}`, recipeCont.list);
+router.get(`/api/recipes-${SID}`, recipeCont.listJson);
 
 // NEW RECIPE
 router.get(`/recipe/add-${SID}`, recipeCont.newForm);
@@ -20,5 +20,7 @@ router.post(`/recipe/delete-${SID}/:recipeId`, recipeCont.remove);
 // EDIT
 router.get(`/recipe/edit-${SID}/:recipeId`, recipeCont.editForm);
 router.post(`/recipe/edit-${SID}/:recipeId`, recipeCont.update);
+
+router.get(`/api/recipes-meta-${SID}`, recipeCont.metaJson);
 
 module.exports = router;

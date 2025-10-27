@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Dashboard } from './pages/dashboard/dashboard';
-import { RecipesList } from './pages/recipes/recipes-list/recipes-list';
+import { RecipeList } from './pages/recipes/recipes-list/recipes-list';
 import { RecipeNew} from './pages/recipes/recipe-new/recipe-new';
 import { RecipeEdit } from './pages/recipes/recipe-edit/recipe-edit';
 import { InventoryList } from './pages/inv/inventory-list/inventory-list';
@@ -16,7 +16,7 @@ export const routes: Routes = [
 
   { path: 'dashboard', component: Dashboard},
 
-  { path: 'recipes', component:RecipesList},
+  { path: 'recipes', component:RecipeList},
   { path: 'recipes/new', component: RecipeNew },
   { path: 'recipes/edit/:id', component: RecipeEdit},
 

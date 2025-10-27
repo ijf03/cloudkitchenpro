@@ -2,36 +2,17 @@ const Recipe = require('../models/recipe');
 const { Types } = require('mongoose');
 
 // check for schema, use list if no schema
-const MEAL = Recipe.schema.path('mealType')?.enumValues || ['Breakfast','Lunch','Dinner','Snack','Dessert'];
-const DIFF = Recipe.schema.path('difficulty')?.enumValues || ['Easy','Medium','Hard'];
-const CUI  = Recipe.schema.path('cuisineType')?.enumValues || [
-  'Asian','European','American','Chinese','Italian','Indian','French','Japanese',
-  'Mexican','Thai','Filipino','Greek','Mediterranean','Fusion','Other'
-];
+const MEAL = Recipe.schema.path('mealType')?.enumValues
+const DIFF = Recipe.schema.path('difficulty')?.enumValues
+const CUI  = Recipe.schema.path('cuisineType')?.enumValues
 
 // helpers for unique R-00000 IDs
-async function nextRecipeId() {
-  const last = await Recipe.findOne({}, { recipeId: 1 })
-    .sort({ recipeId: -1 })
-    .lean();
-
-  const lastNum = last ? parseInt(String(last.recipeId).slice(2), 10) : 0;
+async function uniqueRecipeId(Model) {
+  const last = await Model.findOne({}, { recipeId: 1 }).sort({ recipeId: -1 }).lean();
+  const lastNum = last ? parseInt(last.recipeId.split('-')[1], 10) : 0;
   return `R-${String(lastNum + 1).padStart(5, '0')}`;
 }
 
-function firstError(e) {
-    if (!e) return null;
-    if (e.code === 11000) {
-      const key = Object.keys(e.keyPattern || {})[0] || 'field';
-      const val = e.keyValue ? JSON.stringify(e.keyValue) : '';
-      return `Duplicate value for ${key}. ${val}`;
-    }
-    if (e.errors) {
-      const k = Object.keys(e.errors)[0];
-      return e.errors[k]?.message || 'Validation error.';
-    }
-    return e.message || 'Validation error.';
-  }
 
 function forbid(res, req) {
   return res.status(403).render('errors/404', { pageTitle: 'Forbidden', url: req.originalUrl });
@@ -66,41 +47,34 @@ async function duplicateRecipeForUser(orig, currentUser) {
   return newId;
 }
 
+exports.metaJson = (req, res) => {
+  res.json({ mealTypes: MEAL, difficulties: DIFF, cuisines: CUI });
+};
+
+
 //GET recipes
-exports.list = async (req, res, next) => {
-  if (!requireChef(req, res)) return;
+exports.listJson = async (req, res, next) => {
   try {
-    const filters = {
-      q: (req.query.q || '').trim(),
-      meal: req.query.meal || '',
-      cuisine: req.query.cuisine || '',
-      difficulty: req.query.difficulty || ''
-    };
+    const q = String(req.query.q || '').trim();
+    const meal = String(req.query.meal || '').trim();
+    const cuisine = String(req.query.cuisine || '').trim();
+    const difficulty = String(req.query.difficulty || '').trim();
 
     const find = {};
-    if (filters.q) {
-      const rx = new RegExp(filters.q, 'i');
+    if (q) {
+      const rx = new RegExp(q, 'i');
       find.$or = [
         { title: rx },
         { chef: rx },
         { ingredients: rx },      // works if ingredients saved as strings
       ];
     }
-    if (filters.meal)       find.mealType    = filters.meal;
-    if (filters.cuisine)    find.cuisineType = filters.cuisine;
-    if (filters.difficulty) find.difficulty  = filters.difficulty;
+    if (meal) find.mealType = meal;
+    if (cuisine) find.cuisineType = cuisine;
+    if (difficulty) find.difficulty = difficulty;
 
-    const recipes = await Recipe.find(find).sort({ createdDate: 1 }).lean();
-
-    res.render('recipes/recipe_list', {
-      pageTitle: 'Recipes',
-      SID: req.app.locals.SID,
-      recipes,
-      filters,
-      mealTypes: MEAL,
-      cuisines: CUI,
-      difficulties: DIFF
-    });
+    const docs = await Recipe.find(find).sort({ title: 1 }).lean();
+    res.json(docs);
   } catch (err) { next(err); }
 };
 
