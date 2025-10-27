@@ -1,16 +1,16 @@
-import {Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import {Auth} from '../../services/auth/auth';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
-
-const INVENTORY_BASE = '/api/inventory-34095756';
+const SID = '34095756';
+const API = 'http://localhost:8080';
+const BASE = `${API}/api/inventory-${SID}`;
+const META = `${API}/api/inventory-meta-${SID}`;
 
 export interface InventoryItem {
   _id?: string;
   inventoryId?: string;
+  userId?: string;
   ingredientName: string;
   quantity: number;
   unit: string;
@@ -19,37 +19,35 @@ export interface InventoryItem {
   expirationDate: string;
   location: string;
   cost: number;
+  createdDate?: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
-  constructor(private http: HttpClient, private auth: Auth) {}
+  constructor(private http: HttpClient) {}
 
-  private withUser() {
-    const u = this.auth.currentUser();
-    const params = new HttpParams({ fromObject: { userId: u?.userId || '' } });
-    return { ...httpOptions, params };
+  list(q = ''): Observable<InventoryItem[]> {
+    const params = q ? new HttpParams().set('q', q) : undefined;
+    return this.http.get<InventoryItem[]>(BASE, { params });
   }
 
-  getAll() {
-    return this.http.get<InventoryItem[]>(INVENTORY_BASE, this.withUser());
+  getOne(inventoryId: string): Observable<InventoryItem> {
+    return this.http.get<InventoryItem>(`${BASE}/${inventoryId}`);
   }
 
-  getOne(inventoryId: string) {
-    return this.http.get<InventoryItem>(`${INVENTORY_BASE}/${inventoryId}`, this.withUser());
+  create(payload: Partial<InventoryItem>) {
+    return this.http.post<InventoryItem>(BASE, payload);
   }
 
-  create(data: InventoryItem) {
-    const payload = { ...data, quantity: +data.quantity, cost: +data.cost };
-    return this.http.post<InventoryItem>(INVENTORY_BASE, payload, this.withUser());
-  }
-
-  update(inventoryId: string, data: InventoryItem) {
-    const payload = { ...data, quantity: +data.quantity, cost: +data.cost };
-    return this.http.put<InventoryItem>(`${INVENTORY_BASE}/${inventoryId}`, payload, this.withUser());
+  update(inventoryId: string, payload: Partial<InventoryItem>) {
+    return this.http.put<InventoryItem>(`${BASE}/${inventoryId}`, payload);
   }
 
   delete(inventoryId: string) {
-    return this.http.delete(`${INVENTORY_BASE}/${inventoryId}`, this.withUser());
+    return this.http.delete<{ ok: boolean }>(`${BASE}/${inventoryId}`);
+  }
+
+  getMeta() {
+    return this.http.get<{units:string[];categories:string[];locations:string[];lowStockThreshold:number}>(META);
   }
 }

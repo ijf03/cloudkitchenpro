@@ -17,11 +17,11 @@ export const routes: Routes = [
 
   { path: 'recipes', component:RecipesList},
   { path: 'recipes/new', component: RecipeNew },
-  { path: 'recipes/:id/edit', component: RecipeEdit},
+  { path: 'recipes/edit/:id', component: RecipeEdit},
 
   { path: 'inventory', component:InventoryList},
   { path: 'inventory/new', component:InventoryNew },
-  { path: 'inventory/:id/edit', component: InventoryEdit},
+  { path: 'inventory/edit/:id', component: InventoryEdit},
 
   { path: 'login', component: Login},
   { path: 'register', component: Register},

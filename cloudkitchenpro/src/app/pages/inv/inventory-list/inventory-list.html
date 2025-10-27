@@ -35,8 +35,14 @@
       <td>{{ it.location }}</td>
       <td class="text-end">{{ it.cost}}</td>
       <td class="text-end">
-        <a class="btn btn-sm btn-outline-secondary me-2" [routerLink]="['/inventory', it._id, 'edit']">Edit</a>
-        <button class="btn btn-sm btn-danger" (click)="delete(it)">Delete</button>
+        <a class="btn btn-sm btn-outline-secondary me-1"
+          [routerLink]="['/inventory/edit', it.inventoryId]">
+          Edit
+        </a>
+        <button class="btn btn-sm btn-outline-danger"
+                (click)="delete(it)">
+          Delete
+        </button>
       </td>
     </tr>
   </tbody>

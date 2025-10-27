@@ -8,14 +8,11 @@ const { SID, PORT, MONGO_URL } = require("./config/constants");
 const recipeRouter = require("./routes/recipe-routes");
 const inventoryRouter = require("./routes/inventory-routes");
 const userRouter = require('./routes/user-routes');
-const homeRoutes = require('./routes/home-routes');
 
 const app = express();
 
 function readUserId(req) {
-  if (req.method === 'GET') return (req.query && req.query.userId) || '';
-  if (req.method === 'POST') return (req.body && req.body.userId)  || (req.query && req.query.userId) || '';
-  return '';
+  return (req.query && req.query.userId) || (req.body && req.body.userId) || '';
 }
 
 app.use((req, res, next) => {
@@ -27,8 +24,6 @@ app.use((req, res, next) => {
 });
 
 // views
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/bootstrap', express.static(
@@ -69,13 +64,12 @@ connectDB(MONGO_URL);
 app.use("/", recipeRouter);
 app.use("/", inventoryRouter);
 app.use('/', userRouter);  
-app.use('/ejs', homeRoutes);
 
-const distPath = path.join(__dirname, "..", "cloudkitchenpro", "dist", "cloudkitchenpro");
-app.use("/", express.static(distPath));
+const distPath = path.join(__dirname, '..', 'cloudkitchenpro', 'dist', 'cloudkitchenpro', 'browser');
+app.use('/', express.static(distPath));
+app.get(/^\/(?!api\/).*/, (req, res) => res.sendFile(path.join(distPath, 'index.html')));
 
 // 404
-app.use((req, res) => res.status(404).render("errors/404", { pageTitle: "Not Found", url: req.originalUrl }));
 app.use('/api', (req, res) => res.status(404).json({ message: 'API route not found' }));
 
 app.listen(PORT, () => console.log(`[server] http://localhost:${PORT}`));

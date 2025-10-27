@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgIf, NgFor, } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router} from '@angular/router';
 import { InventoryService, InventoryItem } from '../../../services/inv/inventory';
 
 @Component({
@@ -17,7 +17,7 @@ export class InventoryList implements OnInit {
   errorMsg = '';
   filterText = '';
 
-  constructor(private inv: InventoryService) {}
+  constructor(private inv: InventoryService, private router: Router) {}
 
   ngOnInit(): void {
     this.load();
@@ -26,9 +26,15 @@ export class InventoryList implements OnInit {
   load() {
     this.loading = true;
     this.errorMsg = '';
-    this.inv.getAll().subscribe({
-      next: (data) => { this.items = data || []; this.loading = false; },
-      error: () => { this.errorMsg = 'Failed to load inventory.'; this.loading = false; }
+    this.inv.list().subscribe({
+      next: (data: InventoryItem[]) => {
+        this.items = data || [];
+        this.loading = false;
+      },
+      error: () => {
+        this.errorMsg = 'Failed to load inventory.';
+        this.loading = false;
+      }
     });
   }
 
@@ -38,12 +44,16 @@ export class InventoryList implements OnInit {
     return this.items.filter(i => (i.ingredientName || '').toLowerCase().includes(q));
   }
 
-  delete(item: InventoryItem) {
-    if (!item._id) return;
-    if (!confirm(`Delete "${item.ingredientName}"?`)) return; // simple confirm (class style)
-    this.inv.delete(item._id).subscribe({
+ edit(it: any) {
+    this.router.navigate(['/inventory/edit', it.inventoryId]);
+  }
+
+  delete(it: any) {
+    if (!it?.inventoryId) return;
+    if (!confirm(`Delete "${it.ingredientName}"?`)) return;
+    this.inv.delete(it.inventoryId).subscribe({
       next: () => this.load(),
-      error: () => alert('Delete failed.')
+      error: err => alert(err?.error?.message || 'Delete failed')
     });
   }
 

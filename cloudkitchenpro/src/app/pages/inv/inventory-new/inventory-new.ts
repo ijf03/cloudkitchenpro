@@ -1,18 +1,20 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { InventoryService, InventoryItem } from '../../../services/inv/inventory';
 
 @Component({
   selector: 'app-inventory-new',
-  imports: [FormsModule, RouterLink, NgIf],
+  imports: [FormsModule, CommonModule],
   templateUrl: './inventory-new.html',
-  styleUrl: './inventory-new.css',
+  styleUrls: ['./inventory-new.css'],
   standalone: true,
 })
-export class InventoryNew {
-  form: InventoryItem = {
+export class InventoryNew implements OnInit {
+  title = 'Add New Item';
+
+  model: Partial<InventoryItem> = {
     ingredientName: '',
     quantity: 0,
     unit: '',
@@ -22,18 +24,37 @@ export class InventoryNew {
     location: '',
     cost: 0
   };
-  submitting = false;
-  errorMsg = '';
+
+  unitOpts: string[] = [];
+  catOpts:  string[] = [];
+  locOpts:  string[] = [];
+  error = '';
 
   constructor(private inv: InventoryService, private router: Router) {}
 
-  onSubmit() {
-    if (this.submitting) return;
-    this.submitting = true;
-    this.errorMsg = '';
-    this.inv.create(this.form).subscribe({
+  ngOnInit(): void {
+    this.inv.getMeta().subscribe({
+      next: meta => {
+        this.unitOpts = meta.units || [];
+        this.catOpts  = meta.categories || [];
+        this.locOpts  = meta.locations || [];
+      },
+      error: () => { this.error = 'Failed to load options'; }
+    });
+  }
+
+  save(f: NgForm) {
+    if (f.invalid) return;
+
+    const payload: Partial<InventoryItem> = {
+      ...this.model,
+      quantity: Number(this.model.quantity || 0),
+      cost: Number(this.model.cost || 0),
+    };
+
+    this.inv.create(payload).subscribe({
       next: () => this.router.navigate(['/inventory']),
-      error: () => { this.errorMsg = 'Create failed.'; this.submitting = false; }
+      error: err => this.error = err?.error?.message || 'Create failed'
     });
   }
 }
