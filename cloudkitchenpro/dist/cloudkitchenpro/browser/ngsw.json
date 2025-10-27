@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1761570261178,
+  "timestamp": 1761575253051,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/favicon.ico",
         "/index.html",
-        "/main-UJUZALPT.js",
+        "/main-BTLV2V5H.js",
         "/manifest.webmanifest",
         "/polyfills-5CFQRCPP.js",
         "/styles-VRDYZCWE.css"
@@ -51,8 +51,8 @@
     "/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
     "/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
     "/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/index.html": "b8f990b7e53e7202ed1bdd66272881fe2efca094",
-    "/main-UJUZALPT.js": "d6d200fa5e21049698a52c19c5a84423b086d1d4",
+    "/index.html": "af10c2a967e9a44bd4aee4e683878dc443509005",
+    "/main-BTLV2V5H.js": "e8eb8c6f8ee7e36953abb6ae685f0c9fdede457d",
     "/manifest.webmanifest": "66a595a7fae63572f59050019be6875483e193c4",
     "/polyfills-5CFQRCPP.js": "f2241e9a25858f895ce299d15f6f22e849e2fd72",
     "/styles-VRDYZCWE.css": "6646c8433a56d2bc29a80a28789d6b454756d105"
