@@ -1,1 +1,68 @@
-<p>recipe-new works!</p>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h4 m-0">{{ titleText }}</h1>
+  <a class="btn btn-outline-secondary" routerLink="/recipes">Back to list</a>
+</div>
+
+<form #f="ngForm" (ngSubmit)="save(f)" class="row g-3">
+
+  <div class="col-md-8">
+    <label class="form-label">Title</label>
+    <input class="form-control" name="title" [(ngModel)]="model.title" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Chef</label>
+    <input class="form-control" name="chef" [(ngModel)]="model.chef" required>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Meal Type</label>
+    <select class="form-select" name="mealType" [(ngModel)]="model.mealType" required>
+      <option value="">Select…</option>
+      <option *ngFor="let m of mealOpts" [value]="m">{{ m }}</option>
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Cuisine</label>
+    <select class="form-select" name="cuisineType" [(ngModel)]="model.cuisineType" required>
+      <option value="">Select…</option>
+      <option *ngFor="let c of cuisineOpts" [value]="c">{{ c }}</option>
+    </select>
+  </div>
+
+  <div class="col-md-4">
+    <label class="form-label">Difficulty</label>
+    <select class="form-select" name="difficulty" [(ngModel)]="model.difficulty" required>
+      <option value="">Select…</option>
+      <option *ngFor="let d of difficultyOpts" [value]="d">{{ d }}</option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Prep Time (min)</label>
+    <input type="number" class="form-control" name="prepTime" [(ngModel)]="model.prepTime" min="0" required>
+  </div>
+
+  <div class="col-md-3">
+    <label class="form-label">Servings</label>
+    <input type="number" class="form-control" name="servings" [(ngModel)]="model.servings" min="1" required>
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Ingredients (one per line)</label>
+    <textarea class="form-control" name="ingredientsText" [(ngModel)]="ingredientsText" rows="6" required></textarea>
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Instructions (one step per line)</label>
+    <textarea class="form-control" name="instructionsText" [(ngModel)]="instructionsText" rows="6" required></textarea>
+  </div>
+
+  <div class="col-12 text-danger" *ngIf="error">{{ error }}</div>
+
+  <div class="col-12">
+    <button class="btn btn-primary" [disabled]="f.invalid">Save Recipe</button>
+    <a class="btn btn-outline-secondary ms-2" routerLink="/recipes">Cancel</a>
+  </div>
+</form>

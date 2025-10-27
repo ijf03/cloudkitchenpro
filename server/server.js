@@ -23,7 +23,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// views
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/bootstrap', express.static(
@@ -31,6 +30,7 @@ app.use('/bootstrap', express.static(
 ));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.locals.SID = SID;
 
 app.use(async (req, res, next) => {
   try {
@@ -53,23 +53,19 @@ app.use(async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-app.locals.SID =SID;
-
-
-// DB connect
 const { connectDB } = require('./config/db');
 connectDB(MONGO_URL);
 
-//ROUTERS
 app.use("/", recipeRouter);
 app.use("/", inventoryRouter);
-app.use('/', userRouter);  
+app.use('/', userRouter);
+
+app.use('/api', (req, res) => res.status(404).json({ message: 'API route not found' }));
 
 const distPath = path.join(__dirname, '..', 'cloudkitchenpro', 'dist', 'cloudkitchenpro', 'browser');
 app.use('/', express.static(distPath));
-app.get(/^\/(?!api\/).*/, (req, res) => res.sendFile(path.join(distPath, 'index.html')));
-
-// 404
-app.use('/api', (req, res) => res.status(404).json({ message: 'API route not found' }));
+app.get(/^\/(?!api\/).*/, (req, res) =>
+  res.sendFile(path.join(distPath, 'index.html'))
+);
 
 app.listen(PORT, () => console.log(`[server] http://localhost:${PORT}`));

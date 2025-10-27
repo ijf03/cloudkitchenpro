@@ -51,4 +51,14 @@ export class RecipeList implements OnInit {
     this.q = this.meal = this.cuisine = this.difficulty = '';
     this.load();
   }
+
+  remove(r: Recipe) {
+    if (!r?.recipeId) return;
+    if (!confirm(`Delete "${r.title}"?`)) return;
+
+    this.svc.delete(r.recipeId).subscribe({
+      next: () => this.load(),
+      error: (err: any) => alert(err?.error?.message || 'Delete failed')
+    });
+  }
 }

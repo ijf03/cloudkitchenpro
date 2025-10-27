@@ -1,1 +1,91 @@
-<p>recipe-edit works!</p>
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h1 m-0">Edit Recipe</h1>
+  <a class="btn btn-outline-secondary" routerLink="/recipes">Back to Recipes</a>
+</div>
+
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+<form #f="ngForm" (ngSubmit)="save(f)" class="row g-3">
+  <input type="hidden" name="recipeId" [value]="model.recipeId" />
+  
+  <div class="col-md-6">
+    <label class="form-label">Title</label>
+    <input name="title"
+    class="form-control"
+    required minlength="3"
+    [(ngModel)]="model.title"
+    placeholder="e.g. Chocolate Cake">
+  </div>
+  
+  <div class="col-md-6">
+    <label class="form-label">Chef Name*</label>
+    <input name="chef"
+    class="form-control"
+    required
+    [(ngModel)]="model.chef"
+    placeholder="e.g. Gordon Ramsay">
+  </div>
+  
+  <div class="col-md-12" *ngIf="currentUserName">
+    <div class="form-check">
+      <input class="form-check-input"
+      type="checkbox"
+      id="isMine"
+      [checked]="isMine"
+      (change)="setMine($event.target.checked)">
+      <label class="form-check-label" for="isMine">
+        This recipe is mine ({{ currentUserName }})
+      </label>
+    </div>
+  </div>
+  
+  
+  <div class="col-md-6">
+    <label class="form-label">Meal Type</label>
+    <select name="mealType" class="form-select" required [(ngModel)]="model.mealType">
+      <option value="">=== Meal Type ===</option>
+      <option *ngFor="let m of mealOpts" [value]="m">{{ m }}</option>
+    </select>
+  </div>
+  
+  <div class="col-md-6">
+    <label class="form-label">Cuisine Type</label>
+    <select name="cuisineType" class="form-select" required [(ngModel)]="model.cuisineType">
+      <option value="">=== Cuisine ===</option>
+      <option *ngFor="let c of cuisineOpts" [value]="c">{{ c }}</option>
+    </select>
+  </div>
+  
+  <div class="col-md-4">
+    <label class="form-label">Difficulty</label>
+    <select name="difficulty" class="form-select" required [(ngModel)]="model.difficulty">
+      <option value="">=== Difficulty ===</option>
+      <option *ngFor="let d of difficultyOpts" [value]="d">{{ d }}</option>
+    </select>
+  </div>
+  
+  <div class="col-md-4">
+    <label class="form-label">Prep Time (mins)</label>
+    <input type="number" name="prepTime" class="form-control" min="1" required [(ngModel)]="model.prepTime">
+  </div>
+  
+  <div class="col-md-4">
+    <label class="form-label">Servings</label>
+    <input type="number" name="servings" class="form-control" min="1" step="1" required [(ngModel)]="model.servings">
+  </div>
+  
+  <div class="col-md-12">
+    <label class="form-label">Ingredients (one per line or comma-separated)</label>
+    <textarea name="ingredientsText" rows="6" class="form-control" required [(ngModel)]="ingredientsText"></textarea>
+  </div>
+  
+  <div class="col-md-12">
+    <label class="form-label">Instructions (one per line or comma-separated)</label>
+    <textarea name="instructionsText" rows="6" class="form-control" required [(ngModel)]="instructionsText"></textarea>
+  </div>
+  
+  <div class="col-12">
+    <button class="btn btn-primary" [disabled]="f.invalid">Save Changes</button>
+    <a class="btn btn-secondary ms-2" routerLink="/recipes">Cancel</a>
+  </div>
+</form>

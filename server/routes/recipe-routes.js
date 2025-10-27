@@ -7,19 +7,16 @@ const {SID} = require('../config/constants');
 router.get(`/api/recipes-${SID}`, recipeCont.listJson);
 
 // NEW RECIPE
-router.get(`/recipe/add-${SID}`, recipeCont.newForm);
-router.post(`/recipe/add-${SID}`, recipeCont.create);
-router.post(`/recipes/duplicate-${SID}/:recipeId`, recipeCont.duplicate);
+router.post(`/api/recipes-${SID}`, recipeCont.createJson);
 
 // VIEW
-router.get(`/recipe/view-${SID}/:recipeId`, recipeCont.view);
+router.get(`/api/recipes-${SID}/:recipeId`, recipeCont.getOneJson);
 
 // DELETE
-router.post(`/recipe/delete-${SID}/:recipeId`, recipeCont.remove);
+router.delete(`/api/recipes-${SID}/:recipeId`, recipeCont.deleteJson);
 
 // EDIT
-router.get(`/recipe/edit-${SID}/:recipeId`, recipeCont.editForm);
-router.post(`/recipe/edit-${SID}/:recipeId`, recipeCont.update);
+router.put(`/api/recipes-${SID}/:recipeId`, recipeCont.updateJson);
 
 router.get(`/api/recipes-meta-${SID}`, recipeCont.metaJson);
 

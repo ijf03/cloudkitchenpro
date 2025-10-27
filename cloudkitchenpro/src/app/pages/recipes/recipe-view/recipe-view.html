@@ -1,0 +1,87 @@
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h1 class="h3 m-0">{{ item?.title }}</h1>
+  <a class="btn btn-outline-secondary" routerLink="/recipes">Back to Recipes</a>
+</div>
+
+<div class="row g-4 mb-1">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-header">Details</div>
+      <div class="card-body">
+        <div class="row g-3">
+          
+          <div class="col-md-6 col-xl-4">
+            <dl class="row mb-0">
+              <dt class="col-5 col-sm-4">Recipe ID</dt>
+              <dd class="col-7 col-sm-8"><code class="text-danger">{{ item?.recipeId }}</code></dd>
+              
+              <dt class="col-5 col-sm-4">Chef</dt>
+              <dd class="col-7 col-sm-8">{{ item?.chef || '—' }}</dd>
+              
+              <dt class="col-5 col-sm-4">Meal Type</dt>
+              <dd class="col-7 col-sm-8">{{ item?.mealType }}</dd>
+            </dl>
+          </div>
+          
+          <div class="col-md-6 col-xl-4">
+            <dl class="row mb-0">
+              <dt class="col-5 col-sm-4">Cuisine</dt>
+              <dd class="col-7 col-sm-8">{{ item?.cuisineType }}</dd>
+              
+              <dt class="col-5 col-sm-4">Prep Time</dt>
+              <dd class="col-7 col-sm-8">{{ item?.prepTime }} min</dd>
+              
+              <dt class="col-5 col-sm-4">Difficulty</dt>
+              <dd class="col-7 col-sm-8">{{ item?.difficulty }}</dd>
+            </dl>
+          </div>
+          
+          <div class="row align-items-center mb-2">
+            <div class="col-5 col-sm-4 fw-semibold">Servings</div>
+            <div class="col-7 col-sm-8">
+              <span class="me-2">{{ servings }}</span>
+              
+              <div class="d-flex gap-2 align-items-center mt-2">
+                <div class="input-group input-group-sm" style="max-width: 200px;">
+                  <button class="btn btn-outline-secondary" type="button" (click)="dec()">−</button>
+                  <input type="number" class="form-control text-center"
+                  min="1" step="1" [(ngModel)]="servings">
+                  <button class="btn btn-outline-secondary" type="button" (click)="inc()">+</button>
+                </div>
+                
+                <button class="btn btn-sm btn-primary" type="button" (click)="applyScale()">Scale</button>
+                <button class="btn btn-sm btn-outline-secondary" type="button" (click)="reset()">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-9">
+    <div class="card shadow-sm h-100">
+      <div class="card-header">Instructions</div>
+      <div class="card-body">
+        <ol class="mb-0" *ngIf="item?.instructions?.length; else noInstr">
+          <li *ngFor="let step of displayInstructions">{{ step }}</li>
+        </ol>
+        <ng-template #noInstr><p class="text-muted mb-0">No instructions listed.</p></ng-template>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-header">Ingredients</div>
+      <div class="card-body">
+        <ul class="mb-0" *ngIf="scaledIngredients?.length; else noIngr">
+          <li *ngFor="let line of scaledIngredients" class="ingredient-line">{{ line }}</li>
+        </ul>
+        <ng-template #noIngr><p class="text-muted mb-0">No ingredients listed.</p></ng-template>
+      </div>
+    </div>
+  </div>
+</div>

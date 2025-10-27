@@ -41,4 +41,20 @@ export class RecipesService {
     if (filters?.difficulty) params = params.set('difficulty', filters.difficulty);
     return this.http.get<Recipe[]>(BASE, { params });
   }
+
+  getOne(recipeId: string) {
+    return this.http.get<Recipe>(`${BASE}/${recipeId}`);
+  }
+
+  create(payload: Partial<Recipe>) {
+    return this.http.post<Recipe>(BASE, payload);
+  }
+
+  update(recipeId: string, payload: Partial<Recipe>) {
+    return this.http.put<Recipe>(`${BASE}/${recipeId}`, payload);
+  }
+
+  delete(recipeId: string) {
+    return this.http.delete(`${BASE}/${recipeId}`);
+  }
 }
