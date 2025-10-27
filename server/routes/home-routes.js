@@ -5,5 +5,4 @@ const { SID } = require('../config/constants');
 
 router.get(`/api/dashboard-${SID}`, homeController.statsJson);
 
-router.get('/', homeController.getHome);
 module.exports = router;
