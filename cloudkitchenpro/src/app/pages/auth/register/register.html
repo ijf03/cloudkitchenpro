@@ -10,13 +10,15 @@
              [pattern]="nameRx" [(ngModel)]="model.fullName">
     </div>
 
-    <div class="col-md-6">
-      <label class="form-label">Role</label>
-      <select name="role" class="form-select" required [(ngModel)]="model.role">
-        <option value="">Select role</option>
-        <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
-      </select>
-    </div>
+  <div class="col-md-6">
+    <label class="form-label">Role</label>
+    <select name="role" class="form-select" required [(ngModel)]="model.role">
+      <option value="">Select role</option>
+      <option value="admin">admin</option>
+      <option value="chef">chef</option>
+      <option value="manager">manager</option>
+    </select>
+  </div>
 
     <div class="col-md-6">
       <label class="form-label">Email</label>
